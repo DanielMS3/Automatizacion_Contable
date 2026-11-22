@@ -1,0 +1,188 @@
+{
+  "purchaseOrders": [
+    {
+      "poNumber": "OC-2026-4490",
+      "vendorName": "Soluciones Cloud Andina S.A.S.",
+      "vendorNit": "901245781-3",
+      "authorizedAmount": 4250000,
+      "costCenter": "CC-TI-04",
+      "glAccount": "513520-Servicios-Cloud"
+    },
+    {
+      "poNumber": "OC-2026-4491",
+      "vendorName": "Logística Integral del Pacífico S.A.",
+      "vendorNit": "890412990-1",
+      "authorizedAmount": 2800000,
+      "costCenter": "CC-OPS-02",
+      "glAccount": "523550-Transporte-Carga"
+    },
+    {
+      "poNumber": "OC-2026-4502",
+      "vendorName": "Consultora Ciberseguridad Nexo Ltda.",
+      "vendorNit": "900881340-7",
+      "authorizedAmount": 6500000,
+      "costCenter": "CC-SEG-01",
+      "glAccount": "511035-Asesoria-Tecnica"
+    }
+  ],
+  "erpLedger": [
+    {
+      "entryId": "ASIENTO-2026-0091",
+      "invoiceNumber": "FAC-2026-0840",
+      "vendorName": "Logística Integral del Pacífico S.A.",
+      "vendorNit": "890412990-1",
+      "purchaseOrder": "OC-2026-4491",
+      "grossAmount": 2800000,
+      "withholdingTax": 98000,
+      "netPayable": 2702000,
+      "costCenter": "CC-OPS-02",
+      "glAccount": "523550-Transporte-Carga",
+      "postedAt": "2026-11-20T14:22:11.000Z"
+    }
+  ],
+  "quarantineQueue": [
+    {
+      "id": "QUAR-2026-001",
+      "executionId": "EXEC-2026-1002",
+      "invoiceNumber": "FAC-2026-0842",
+      "vendorName": "Soluciones Cloud Andina S.A.S.",
+      "vendorNit": "901245781-3",
+      "purchaseOrder": "OC-2026-4490",
+      "amount": 5150000,
+      "reasonCode": "PO_VARIANCE_EXCEEDED",
+      "reasonMessage": "El monto facturado ($5.150.000) supera la tolerancia del 5% sobre OC-2026-4490 ($4.250.000). Desviación: +21.18%.",
+      "costCenter": "CC-TI-04",
+      "glAccount": "513520-Servicios-Cloud",
+      "status": "pending",
+      "createdAt": "2026-11-20T14:35:48.000Z"
+    }
+  ],
+  "executionLogs": [
+    {
+      "id": "EXEC-2026-1001",
+      "timestamp": "2026-11-20T14:22:11.000Z",
+      "source": "ui_payload",
+      "scenarioLabel": "Escenario 1: Flujo nominal con conciliación exacta de OC",
+      "scenarioType": "success",
+      "invoiceNumber": "FAC-2026-0840",
+      "vendorName": "Logística Integral del Pacífico S.A.",
+      "amount": 2800000,
+      "aiConfidence": 0.98,
+      "totalDurationMs": 412,
+      "finalOutcome": "Causada en ERP",
+      "steps": [
+        {
+          "nodeId": "trigger-webhook",
+          "nodeName": "Recepción Buzón / Webhook",
+          "status": "success",
+          "durationMs": 18,
+          "httpStatus": 200,
+          "summary": "Documento electrónico recibido (XML + PDF) desde proveedor verificado."
+        },
+        {
+          "nodeId": "ocr-ai",
+          "nodeName": "Extracción OCR & Clasificación IA",
+          "status": "success",
+          "durationMs": 145,
+          "httpStatus": 200,
+          "summary": "Entidades extraídas con confianza 0.98; cuenta contable sugerida 523550."
+        },
+        {
+          "nodeId": "tax-api",
+          "nodeName": "Validación Tributaria & OC",
+          "status": "success",
+          "durationMs": 112,
+          "httpStatus": 200,
+          "attempt": 1,
+          "summary": "NIT 890412990-1 activo; OC-2026-4491 dentro de tolerancia (0.0%)."
+        },
+        {
+          "nodeId": "decision-if",
+          "nodeName": "Regla de Decisión (IF)",
+          "status": "success",
+          "durationMs": 6,
+          "summary": "Condición verdadera: desviación <= 5% y estado fiscal vigente."
+        },
+        {
+          "nodeId": "erp-post",
+          "nodeName": "Causación Contable en ERP",
+          "status": "success",
+          "durationMs": 89,
+          "httpStatus": 201,
+          "summary": "Asiento ASIENTO-2026-0091 generado. Neto a pagar: $2.702.000 COP."
+        },
+        {
+          "nodeId": "notify-success",
+          "nodeName": "Notificación a Tesorería",
+          "status": "success",
+          "durationMs": 42,
+          "httpStatus": 200,
+          "summary": "Confirmación registrada para Tesorería."
+        }
+      ]
+    },
+    {
+      "id": "EXEC-2026-1002",
+      "timestamp": "2026-11-20T14:35:48.000Z",
+      "source": "ui_payload",
+      "scenarioLabel": "Escenario 2: Error controlado por sobrecosto respecto a OC",
+      "scenarioType": "controlled_error",
+      "invoiceNumber": "FAC-2026-0842",
+      "vendorName": "Soluciones Cloud Andina S.A.S.",
+      "amount": 5150000,
+      "aiConfidence": 0.96,
+      "totalDurationMs": 368,
+      "finalOutcome": "En cuarentena (Error controlado)",
+      "steps": [
+        {
+          "nodeId": "trigger-webhook",
+          "nodeName": "Recepción Buzón / Webhook",
+          "status": "success",
+          "durationMs": 14,
+          "httpStatus": 200,
+          "summary": "Documento electrónico recibido desde buzón de facturación."
+        },
+        {
+          "nodeId": "ocr-ai",
+          "nodeName": "Extracción OCR & Clasificación IA",
+          "status": "success",
+          "durationMs": 132,
+          "httpStatus": 200,
+          "summary": "Entidades extraídas con confianza 0.96; monto facturado $5.150.000 COP."
+        },
+        {
+          "nodeId": "tax-api",
+          "nodeName": "Validación Tributaria & OC",
+          "status": "error",
+          "durationMs": 118,
+          "httpStatus": 422,
+          "attempt": 1,
+          "summary": "Rechazo 422 (PO_VARIANCE_EXCEEDED): monto excede OC-2026-4490 en +21.18% (máx 5%)."
+        },
+        {
+          "nodeId": "decision-if",
+          "nodeName": "Regla de Decisión (IF)",
+          "status": "error",
+          "durationMs": 5,
+          "summary": "Condición falsa: se desvía ejecución hacia rama alterna de cuarentena financiera."
+        },
+        {
+          "nodeId": "quarantine-alert",
+          "nodeName": "Cuarentena & Alerta Controlada",
+          "status": "success",
+          "durationMs": 99,
+          "httpStatus": 200,
+          "summary": "Factura aislada en cola de revisión humana (QUAR-2026-001)."
+        }
+      ]
+    }
+  ],
+  "settings": {
+    "outboundWebhookUrl": "",
+    "notificationEmail": "danielricardomorenortiz@gmail.com",
+    "tolerancePercent": 5,
+    "minAiConfidence": 0.85,
+    "requireHmacHeader": false,
+    "hmacSecret": "custodios-hmac-2026"
+  }
+}

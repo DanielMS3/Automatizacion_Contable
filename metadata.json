@@ -1,0 +1,6 @@
+{
+  "name": "Custodios de la Innovación — Estudio de Automatización",
+  "description": "Prototipo funcional Node-RED, diagrama BPMN, registro de pruebas y generador de informe académico APA 7.ª ed. para el Seminario de Actualización.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
